@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+// Ubah jalur import ke path relatif agar langsung ketemu
+import { logoutAdmin } from "../app/admin/actions"; 
+// Atau jika folder components berada di dalam app, gunakan: import { logoutAdmin } from "./actions";
 
 export default function NavAdmin() {
   return (
@@ -9,10 +14,12 @@ export default function NavAdmin() {
       <Link href="/admin/password" className="font-semibold hover:text-utama">
         Ganti password
       </Link>
-      {/* US-04: tombol keluar belum berfungsi */}
-      <button type="button" className="ml-auto text-teks-lembut hover:text-bahaya">
-        Keluar
-      </button>
+
+      <form action={logoutAdmin} className="ml-auto">
+        <button type="submit" className="text-teks-lembut hover:text-bahaya">
+          Keluar
+        </button>
+      </form>
     </nav>
   );
 }

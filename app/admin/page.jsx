@@ -18,9 +18,6 @@ export default function HalamanAdmin() {
         {/* US-08 (bonus): tambah produk */}
         <Tombol href="/admin/produk/baru">Tambah produk</Tombol>
       </div>
-      <CatatanBelumAktif>
-        Halaman admin belum terlindungi dan masih memakai data contoh: lihat US-06 dan US-07.
-      </CatatanBelumAktif>
       <TabelProduk daftarProduk={daftarProduk} />
     </div>
   );
