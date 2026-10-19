@@ -1,36 +1,34 @@
-import KartuProduk from "@/components/KartuProduk";
-import CatatanBelumAktif from "@/components/CatatanBelumAktif";
-import { produkContoh } from "@/lib/data-contoh";
-import { toko } from "@/lib/toko";
+import KartuProduk from "@/components/KartuProduk"; // Komponen kartu produk sesuai instruksi
+import { createClient } from "@/lib/supabase/server";
 
-// US-01: halaman ini masih memakai data contoh.
-// Tugas peserta: ambil daftar produk dari tabel "produk" di Supabase, di sisi server.
-export default function HalamanKatalog() {
-  const daftarProduk = produkContoh;
+export default async function HalamanKatalog() {
+  const supabase = createClient();
+  const { data: produk, error } = await supabase.from("produk").select("*");
 
+  // Jika gagal ambil data dari Supabase
+  if (error) {
+    return (
+      <div className="py-12 text-center text-merah">
+        Gagal mengambil data produk: {error.message}
+      </div>
+    );
+  }
+
+  // Jika tabel di Supabase masih kosong
+  if (!produk || produk.length === 0) {
+    return (
+      <div className="py-12 text-center text-teks-lembut">
+        Belum ada produk
+      </div>
+    );
+  }
+
+  // Tampilkan daftar produk menggunakan KartuProduk
   return (
-    <>
-      <section className="py-10 sm:py-14">
-        <h1 className="max-w-2xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-          {toko.nama}
-        </h1>
-        <p className="mt-3 max-w-xl text-lg text-teks-lembut">{toko.tagline}</p>
-        <p className="mt-4 text-sm text-teks-lembut">{toko.jamBuka}</p>
-      </section>
-
-      <section aria-labelledby="judul-produk" className="flex flex-col gap-5">
-        <h2 id="judul-produk" className="text-xl font-bold">
-          Produk kami
-        </h2>
-        <CatatanBelumAktif>
-          Masih data contoh. Sambungkan ke database: lihat US-01 di docs/user-stories.md.
-        </CatatanBelumAktif>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          {daftarProduk.map((produk) => (
-            <KartuProduk key={produk.id} produk={produk} />
-          ))}
-        </div>
-      </section>
-    </>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 py-8">
+      {produk.map((item) => (
+        <KartuProduk key={item.id} produk={item} />
+      ))}
+    </div>
   );
 }
